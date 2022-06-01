@@ -2,32 +2,33 @@
     <table class="table table-striped">
         <thead class="thead-light">
         <tr>
-            <th>Name</th><th>Genre</th><th>Release Date</th>
+            <th>Name</th>
+            <th>Genre</th>
+            <th>Release Date</th>
+            <th><input type="checkbox" @bind="displayButtons"/></th>
         </tr>
         </thead>
         <tbody>
             @foreach (var item in Games)
             {
-                <tr>
+                @*<tr>
                     <td>@item.Name</td>
                     <td>@item.Genre</td>
                     <td>@item.ReleaseDate.ToString("dd.MM.yyyy")</td>
-                </tr>
+                </tr>*@
+                <IndividualGameComponent Game="item" IsTable="true" DisplayButtons="displayButtons" DeleteGame="DeleteTheGame"/>
             }
         </tbody>
     </table>
 </div>
 
-@code {
-    private List<Game> Games { get; set; }
+@code 
+{
+    [Parameter] public List<Game> Games { get; set; }
+    bool displayButtons = false;
 
-    protected async override Task OnInitializedAsync()
+    void DeleteTheGame(Game game)
     {
-        Games = new List<Game>
-        {
-            new Game {Name = "Farming Simulator", Genre = "Simulator", ReleaseDate = new DateTime(2018, 11, 19)},
-            new Game {Name = "The Witcher 3", Genre = "Action/RPG", ReleaseDate = new DateTime(2015, 05, 18)},
-            new Game {Name = "Destroy All Humans", Genre = "Action-Adventure", ReleaseDate = new DateTime(2016, 10, 22)}
-        };
+        Games.Remove(game);
     }
 }
