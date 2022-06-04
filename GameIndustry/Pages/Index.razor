@@ -12,20 +12,53 @@
     </div>
 </div>
 
-<GameListComponent Games="_games"/>
+<GameListComponent Games="_games" />
 
-<IndividualGameComponent Game="_games[0]" IsTable="false" DisplayButtons="true"/>
+<IndividualGameComponent Game="_oneGameToShow" IsTable="false" DisplayButtons="true" SwitchGame="ShowNawGame"/>
 
 @code
 {
     private List<Game> _games;
-    protected override void OnInitialized()
+    Random _rnd;
+    Game _oneGameToShow;
+    protected async override Task OnInitializedAsync()
     {
+        await Task.Delay(2000);
         _games = new List<Game>
         {
             new Game {Name = "Farming Simulator", Genre = "Simulator", ReleaseDate = new DateTime(2018, 11, 19)},
             new Game {Name = "The Witcher 3", Genre = "Action/RPG", ReleaseDate = new DateTime(2015, 05, 18)},
             new Game {Name = "Destroy All Humans", Genre = "Action-Adventure", ReleaseDate = new DateTime(2016, 10, 22)}
         };
+
+        _rnd = new Random(DateTime.Now.Millisecond);
+        _oneGameToShow = _games[_rnd.Next(0, _games.Count)];
+    }
+
+    void ShowNawGame()
+    {
+        _oneGameToShow = SwitchGame();
+    }
+
+    Game SwitchGame()
+    {
+        Game tempGame;
+        if (_games.Count >= 2)
+        {
+            int iterator = _rnd.Next(0, _games.Count);
+            tempGame = _games[iterator];
+        }
+        else
+        {
+            if (_games.Count == 1)
+            {
+                tempGame = _games[0];
+            }
+            else
+            {
+                return new Game{Name = "No items", ReleaseDate = DateTime.Now};
+            }
+        }
+        return tempGame;
     }
 }
